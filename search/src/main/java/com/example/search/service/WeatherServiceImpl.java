@@ -1,8 +1,11 @@
 package com.example.search.service;
 
 
+import com.example.detail.service.GetCityIdService;
 import com.example.search.config.EndpointConfig;
 import com.example.search.pojo.City;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,34 +14,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class WeatherServiceImpl implements WeatherService{
-
     private final RestTemplate restTemplate;
 
-
+    @Autowired
     public WeatherServiceImpl(RestTemplate getRestTemplate) {
         this.restTemplate = getRestTemplate;
     }
 
     @Override
     @Retryable(include = IllegalAccessError.class)
-    public List<Integer> findCityIdByName(String city) {
-        City[] cities = restTemplate.getForObject(EndpointConfig.queryWeatherByCity + city, City[].class);
-        List<Integer> ans = new ArrayList<>();
-        for(City c: cities) {
-            if(c != null && c.getWoeid() != null) {
-                ans.add(c.getWoeid());
-            }
-        }
+    public Map<String, Map> findWeatherByName(String city) {
+        List<Integer> id = findCityIdByName(city);
+        return findCityNameById(id.get(0));
+    }
+
+    @Override
+    @Retryable(include = IllegalAccessError.class)
+    public Map<String, Map> findCityNameById(int id) {
+        Map<String, Map> ans = restTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
         return ans;
     }
 
     @Override
-    public Map<String, Map> findCityNameById(int id) {
-        Map<String, Map> ans = restTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
-        return ans;
+    @Retryable(include = IllegalAccessError.class)
+    public List<Integer> findCityIdByName (String city) {
+        return restTemplate.getForObject((EndpointConfig.detail_service + city),List.class);
     }
 }
 

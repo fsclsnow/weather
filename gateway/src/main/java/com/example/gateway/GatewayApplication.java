@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @EnableEurekaClient
 @SpringBootApplication
-public class GatewayApplication {
+public class  GatewayApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

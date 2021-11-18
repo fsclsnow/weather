@@ -7,13 +7,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 public class WeatherController {
@@ -30,9 +30,10 @@ public class WeatherController {
 
     @GetMapping("/weather")
     public ResponseEntity<?> queryWeatherByCity(@RequestParam(required = true) String city) {
-        return new ResponseEntity<>(weatherService.findCityIdByName(city), HttpStatus.OK);
+//        ExecutorService es = Executors.newFixedThreadPool(5);
+//        CompletableFuture<Integer> ids = es.submit();
+        return new ResponseEntity<>(weatherService.findWeatherByName(city), HttpStatus.OK);
     }
-
 
     @GetMapping("/weather/{id}")
     public ResponseEntity<?> queryWeatherByCity(@PathVariable int id) {
