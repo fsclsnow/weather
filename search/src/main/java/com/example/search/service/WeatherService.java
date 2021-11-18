@@ -10,6 +10,6 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public interface WeatherService {
     Map<String, Map> findCityNameById(int id);
-    List<Integer> findCityIdByName(String city);
-    Map<String, Map> findWeatherByName(String city);
+    Integer findCityIdByName(String city);
+    List<Map<String, Map>> findWeatherByName(List<String> cities);
 }

@@ -29,10 +29,8 @@ public class WeatherController {
     }
 
     @GetMapping("/weather")
-    public ResponseEntity<?> queryWeatherByCity(@RequestParam(required = true) String city) {
-//        ExecutorService es = Executors.newFixedThreadPool(5);
-//        CompletableFuture<Integer> ids = es.submit();
-        return new ResponseEntity<>(weatherService.findWeatherByName(city), HttpStatus.OK);
+    public ResponseEntity<?> queryWeatherByCity(@RequestParam(required = true) List<String> cities) {
+        return new ResponseEntity<>(weatherService.findWeatherByName(cities), HttpStatus.OK);
     }
 
     @GetMapping("/weather/{id}")

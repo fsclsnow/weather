@@ -10,7 +10,6 @@ import java.time.Duration;
 @Configuration
 public class RestTemplateConfig {
     @Bean
-    @LoadBalanced
     public RestTemplate getRestTemplate() {
         return new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(5)).build();
     }
