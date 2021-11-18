@@ -28,7 +28,7 @@ public class DetailController {
         return new ResponseEntity<>("detail service port is " + serverPort, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("/name")
     public ResponseEntity<?> queryIDByCity(@RequestParam(required = true) String city) {
         return new ResponseEntity<>("city id is = " + getCityIdService.findCityIdByName(city), HttpStatus.OK);
     }
