@@ -8,5 +8,5 @@ import org.springframework.web.client.RestTemplate;
 public class EndpointConfig {
     public static final String queryWeatherByCity = "https://www.metaweather.com/api/location/search/?query=";
     public static final String queryWeatherById = "https://www.metaweather.com/api/location/";
-    public static final String detail_service = "http://detail-service/name?city=";
+    public static final String detail_service = "http://detail-service/?city=";
 }

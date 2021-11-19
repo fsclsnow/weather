@@ -30,9 +30,9 @@ public class WeatherServiceImpl implements WeatherService{
 
     @Override
     @Retryable(include = IllegalAccessError.class)
-    public List<Map<String, Map>>findWeatherByName(List<String> cities) {
+    public List<Map<String, Map>>findWeatherByNameList(List<String> cities) {
         List<Map<String, Map>> res = new ArrayList<>();
-        List<CompletableFuture<Integer>> future = new ArrayList<>();
+        List<CompletableFuture<?>> future = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
         for (String city: cities) {
             ids.add(findCityIdByName(city));
@@ -41,8 +41,17 @@ public class WeatherServiceImpl implements WeatherService{
             CompletableFuture<?> f = CompletableFuture.supplyAsync(() -> {
                         return APIRestTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
                     }, es).thenApplyAsync(w -> res.add(w));
+            future.add(f);
         }
         return res;
+    }
+
+    @Override
+    @Retryable(include = IllegalAccessError.class)
+    public Map<String, Map>findWeatherByName(String city) {
+        Integer id = findCityIdByName(city);
+        Map<String, Map> ans = APIRestTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
+        return ans;
     }
 
     @Override
