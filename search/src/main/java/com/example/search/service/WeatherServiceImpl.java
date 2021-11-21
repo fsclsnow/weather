@@ -33,16 +33,13 @@ public class WeatherServiceImpl implements WeatherService{
     public List<Map<String, Map>>findWeatherByNameList(List<String> cities) {
         List<Map<String, Map>> res = new ArrayList<>();
         List<CompletableFuture<?>> future = new ArrayList<>();
-        List<Integer> ids = new ArrayList<>();
         for (String city: cities) {
-            ids.add(findCityIdByName(city));
-        }
-        for (Integer id: ids) {
-            CompletableFuture<?> f = CompletableFuture.supplyAsync(() -> {
-                        return APIRestTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
-                    }, es).thenApplyAsync(w -> res.add(w));
+            CompletableFuture<?> f = CompletableFuture.supplyAsync(() ->
+                    APIRestTemplate.getForObject(EndpointConfig.queryWeatherById + findCityIdByName(city), HashMap.class), es)
+                    .thenApplyAsync(w -> res.add(w));
             future.add(f);
         }
+        CompletableFuture.allOf();
         return res;
     }
 
